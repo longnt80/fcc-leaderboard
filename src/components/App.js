@@ -7,32 +7,30 @@ const fcc = {
   recent: 'https://fcctop100.herokuapp.com/api/fccusers/top/recent'
 }
 
-
-
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: fcc.alltime};
+    this.state = {url: fcc.alltime};
   }
 
-  whenBtnClicked = (e) => {
-    console.log(e.target.innerText);
+  changeUrl = (e) => {
     const btn = e.target.innerText;
+    console.log(btn);
     if ( btn === 'Recent' ) {
-      this.setState(prevState => ({data: fcc.recent}));
+      this.setState(prevState => ({url: fcc.recent}));
     }
     else if ( btn === 'All Time' ) {
-      this.setState(prevState => ({data: fcc.alltime}));
+      this.setState(prevState => ({url: fcc.alltime}));
     }
-
   }
 
   render() {
-    console.log(this.state.data);
+    console.log(this.state.url);
+
     return (
       <div>
-        <Header showBtn={this.whenBtnClicked}/>
-        <Table api={this.state.data}/>
+        <Header whenBtnClicked={this.changeUrl}/>
+        <Table url={this.state.url}/>
       </div>
     )
   }

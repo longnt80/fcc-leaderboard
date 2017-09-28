@@ -1,0 +1,31 @@
+.Header {
+  margin: 3px;
+  display: flex;
+}
+
+.Header button {
+  flex: 1 1 auto;
+  width: 50%;
+
+  color: #FFF;
+  background-color: #006400;
+  border: none;
+  margin-right: 3px;
+  cursor: pointer;
+  padding: .5em 0;
+  font-size: 1.4em;
+}
+
+.Header button.active,
+.Header button:hover,
+.Header button:focus {
+  background-color: #024202;
+}
+
+.Header button:focus {
+  outline: none;
+}
+
+.Header button:last-child {
+  margin-right: 0;
+}

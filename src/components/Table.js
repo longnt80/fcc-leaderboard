@@ -18,8 +18,10 @@ class Table extends React.Component {
     });
   }
 
-  componentWillReceiveProps() {
-    this.setState(prevState => ({data: []}));
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.url !== this.props.url) {
+      this.setState(prevState => ({data: []}));
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -36,8 +38,7 @@ class Table extends React.Component {
 
   render() {
     let campers = '';
-
-    const tableHeader = (
+    const tableHeaderRecent = (
       <div className="camper Table__header">
       <div className="camper__rank Table__header__item">#</div>
       <div className="camper__username Table__header__item">Camper Name</div>
@@ -45,29 +46,64 @@ class Table extends React.Component {
       <div className="camper__alltime-points Table__header__item">All time points</div>
       </div>
     )
-
-    if (this.state.data.length === 0) {
-      campers = 'Loading...'
-    }
-    else {
-      campers = this.state.data.map((camper, i) => {
-        return (
-          <div className="camper" key={camper.username}>
-          <div className="camper__rank">{i + 1}</div>
-          <div className="camper__username"><a href={'https://www.freecodecamp.org/' + camper.username}>{camper.username}</a></div>
-          <div className="camper__recent-points">{camper.recent}</div>
-          <div className="camper__alltime-points">{camper.alltime}</div>
-          </div>
-        )
-      });
-    }
-
-    return (
-      <div className="Table">
-        {tableHeader}
-        {campers}
+    const tableHeaderAlltime = (
+      <div className="camper Table__header">
+      <div className="camper__rank Table__header__item">#</div>
+      <div className="camper__username Table__header__item">Camper Name</div>
+      <div className="camper__alltime-points Table__header__item">All time points</div>
+      <div className="camper__recent-points Table__header__item">Points in past 30 days</div>
       </div>
     )
+
+
+    if (this.state.data.length === 0) {
+      campers = <div className="Table"><div className="preload-text">Loading...</div></div>
+    }
+    else {
+      if ( this.props.tableType === 'recent' ) {
+        campers = this.state.data.map((camper, i) => {
+          return (
+            <div className="camper" key={camper.username}>
+            <div className="camper__rank">{i + 1}</div>
+            <div className="camper__username"><img src={camper.img} alt=""/><a href={'https://www.freecodecamp.org/' + camper.username}>{camper.username}</a></div>
+            <div className="camper__recent-points">{camper.recent}</div>
+            <div className="camper__alltime-points">{camper.alltime}</div>
+            </div>
+          )
+        });
+      }
+      else if ( this.props.tableType === 'alltime' ) {
+        campers = this.state.data.map((camper, i) => {
+          return (
+            <div className="camper" key={camper.username}>
+            <div className="camper__rank">{i + 1}</div>
+            <div className="camper__username"><img src={camper.img} alt=""/><a href={'https://www.freecodecamp.org/' + camper.username}>{camper.username}</a></div>
+            <div className="camper__alltime-points">{camper.alltime}</div>
+            <div className="camper__recent-points">{camper.recent}</div>
+            </div>
+          )
+        });
+      }
+
+    }
+
+
+    if ( this.props.tableType === 'recent' ) {
+      return (
+        <div className="Table">
+        {tableHeaderRecent}
+        {campers}
+        </div>
+      )
+    }
+    else if ( this.props.tableType === 'alltime' ) {
+      return (
+        <div className="Table">
+        {tableHeaderAlltime}
+        {campers}
+        </div>
+      )
+    }
   }
 }
 

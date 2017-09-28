@@ -2,10 +2,19 @@
   font-size: 1rem;
 }
 
+.Table .preload-text {
+  margin: 3px;
+}
+
 .Table .camper  {
   display: flex;
   flex-wrap: wrap;
   min-width: 350px;
+}
+
+.Table .camper a {
+  text-decoration: none;
+  color: #006400;
 }
 
 .Table__header {
@@ -28,16 +37,13 @@
   border: 3px solid #FFF;
   padding: .5em 0;
   overflow: hidden;
-}
-
-.Table .camper__rank {
-  width: 2em;
+  display: flex;
+  align-items: center;
 }
 
 .Table .camper__username,
 .Table .camper__recent-points,
 .Table .camper__alltime-points {
-  width: 30%;
   padding-left: 1em;
   padding-right: 1em;
 }
@@ -45,5 +51,25 @@
 .Table .camper__rank,
 .Table .camper__recent-points,
 .Table .camper__alltime-points {
-  text-align: center;
+  justify-content: center;
+}
+
+
+.Table .camper__rank {
+  width: 5%;
+}
+
+.Table .camper__username {
+  width: 55%;
+}
+.Table .camper__username img {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.Table .camper__recent-points,
+.Table .camper__alltime-points {
+  width: 20%;
 }

@@ -10,27 +10,28 @@ const fcc = {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {url: fcc.alltime};
+    this.state = {url: fcc.alltime, tableType: 'alltime'};
   }
 
   changeUrl = (e) => {
     const btn = e.target.innerText;
     console.log(btn);
     if ( btn === 'Recent' ) {
-      this.setState(prevState => ({url: fcc.recent}));
+      this.setState(prevState => ({url: fcc.recent, tableType: 'recent'}));
     }
     else if ( btn === 'All Time' ) {
-      this.setState(prevState => ({url: fcc.alltime}));
+      this.setState(prevState => ({url: fcc.alltime, tableType: 'alltime'}));
     }
   }
 
   render() {
     console.log(this.state.url);
 
+
     return (
-      <div>
-        <Header whenBtnClicked={this.changeUrl}/>
-        <Table url={this.state.url}/>
+      <div className="App">
+        <Header whenBtnClicked={this.changeUrl} tableType={this.state.tableType} />
+        <Table url={this.state.url} tableType={this.state.tableType} />
       </div>
     )
   }

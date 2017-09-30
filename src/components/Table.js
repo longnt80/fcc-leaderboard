@@ -1,42 +1,8 @@
 import React from 'react';
-import axios from 'axios';
 import './Table.css';
 
-class Table extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {data: []}
-  }
+const Table = ({tableType, data}) => {
 
-  componentDidMount() {
-    axios.get(this.props.url)
-    .then(function (res) {
-      this.setState(prevState => ({data: res.data}));
-    }.bind(this))
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.url !== this.props.url) {
-      this.setState(prevState => ({data: []}));
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.url !== this.props.url) {
-      axios.get(this.props.url)
-      .then(function (res) {
-        this.setState(prevState => ({data: res.data}));
-      }.bind(this))
-      .catch(function (error) {
-        console.log(error);
-      });
-    }
-  }
-
-  render() {
     let campers = '';
     const tableHeaderRecent = (
       <div className="camper Table__header">
@@ -55,25 +21,24 @@ class Table extends React.Component {
       </div>
     )
 
-
-    if (this.state.data.length === 0) {
-      campers = <div className="Table"><div className="preload-text">Loading...</div></div>
+    if (data === undefined) {
+      campers = <div className="Table"><div className="preload-text">Loading campers...</div></div>
     }
     else {
-      if ( this.props.tableType === 'recent' ) {
-        campers = this.state.data.map((camper, i) => {
+      if ( tableType === 'recent' ) {
+        campers = data.map((camper, i) => {
           return (
             <div className="camper" key={camper.username}>
-            <div className="camper__rank">{i + 1}</div>
-            <div className="camper__username"><img src={camper.img} alt=""/><a href={'https://www.freecodecamp.org/' + camper.username}>{camper.username}</a></div>
-            <div className="camper__recent-points">{camper.recent}</div>
-            <div className="camper__alltime-points">{camper.alltime}</div>
+              <div className="camper__rank">{i + 1}</div>
+              <div className="camper__username"><img src={camper.img} alt=""/><a href={'https://www.freecodecamp.org/' + camper.username}>{camper.username}</a></div>
+              <div className="camper__recent-points">{camper.recent}</div>
+              <div className="camper__alltime-points">{camper.alltime}</div>
             </div>
           )
         });
       }
-      else if ( this.props.tableType === 'alltime' ) {
-        campers = this.state.data.map((camper, i) => {
+      else if ( tableType === 'alltime' ) {
+        campers = data.map((camper, i) => {
           return (
             <div className="camper" key={camper.username}>
             <div className="camper__rank">{i + 1}</div>
@@ -87,8 +52,7 @@ class Table extends React.Component {
 
     }
 
-
-    if ( this.props.tableType === 'recent' ) {
+    if ( tableType === 'recent' ) {
       return (
         <div className="Table">
         {tableHeaderRecent}
@@ -96,7 +60,7 @@ class Table extends React.Component {
         </div>
       )
     }
-    else if ( this.props.tableType === 'alltime' ) {
+    else if ( tableType === 'alltime' ) {
       return (
         <div className="Table">
         {tableHeaderAlltime}
@@ -104,7 +68,7 @@ class Table extends React.Component {
         </div>
       )
     }
-  }
+
 }
 
 export default Table;

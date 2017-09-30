@@ -1,5 +1,11 @@
 import React from 'react';
+import axios from 'axios';
 import Table from './Table';
+// import TableRecent from './TableRecent';
+// import TableAlltime from './TableAlltime';
+// import TableRecentHeader from './TableRecentHeader';
+// import TableAlltimeHeader from './TableAlltimeHeader';
+// import TableLoading from './TableLoading';
 import Header from './Header';
 
 const fcc = {
@@ -10,28 +16,93 @@ const fcc = {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {url: fcc.alltime, tableType: 'alltime'};
+    this.state = {
+      url: fcc.alltime,
+      tableType: 'alltime',
+      campersArray: [],
+      cachedArray: {}
+    };
+  }
+
+  update(val) {
+    const { url, cachedArray } =  this.state;
+    const cached = cachedArray[url];
+
+    if (!cached) {
+      axios.get(this.state.url)
+      .then(res => res.data)
+      .then(result => {
+        this.setState({
+          cachedArray: {
+            ...cachedArray,
+            [url]: result
+          }
+        });
+      })
+      .catch(error => console.log(error));
+    }
+
+  }
+
+  componentDidMount() {
+    this.update(this.state.url);
   }
 
   changeUrl = (e) => {
     const btn = e.target.innerText;
-    console.log(btn);
     if ( btn === 'Recent' ) {
-      this.setState(prevState => ({url: fcc.recent, tableType: 'recent'}));
+      this.setState({
+        url: fcc.recent,
+        tableType: 'recent'
+      });
     }
     else if ( btn === 'All Time' ) {
-      this.setState(prevState => ({url: fcc.alltime, tableType: 'alltime'}));
+      this.setState({
+        url: fcc.alltime,
+        tableType: 'alltime'});
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.url !== this.state.url) {
+      this.setState({campersArray: []});
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.url !== this.state.url) {
+      this.update();
     }
   }
 
   render() {
-    console.log(this.state.url);
+    const { url, cachedArray } = this.state;
+    const cachedData = cachedArray[url];
 
+    // if (cachedData === undefined) {
+    //   return (
+    //     <div className="App">
+    //       <Header whenBtnClicked={this.changeUrl} tableType={this.state.tableType} />
+    //       <TableLoading />
+    //     </div>
+    //   )
+    // }
+    // else {
+    //   if (tableType === 'recent') {
+    //     return (
+    //       <div className="App">
+    //         <Header whenBtnClicked={this.changeUrl} tableType={this.state.tableType} />
+    //         <TableRecent key={}/>
+    //       </div>
+    //     )
+    //   }
+    // }
 
     return (
       <div className="App">
         <Header whenBtnClicked={this.changeUrl} tableType={this.state.tableType} />
-        <Table url={this.state.url} tableType={this.state.tableType} />
+        <Table tableType={this.state.tableType} data={cachedData} />
+
       </div>
     )
   }
